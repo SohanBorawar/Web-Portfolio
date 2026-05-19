@@ -165,6 +165,23 @@ body {
   background: currentColor;
 }
 
+.brand-mark {
+  display: grid;
+  width: 2.15rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 0.8rem;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-secondary) 92%, #ffffff), var(--color-secondary)),
+    var(--color-secondary);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 12px 24px -16px var(--color-secondary);
+}
+
 .hero-grid {
   background:
     radial-gradient(circle at 11% 52%, color-mix(in srgb, var(--color-secondary) 10%, transparent), transparent 28%),
@@ -537,6 +554,449 @@ body {
   box-shadow: none;
 }
 
+.project-page-card {
+  overflow: hidden;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 10px;
+  background: var(--color-surface-container-low);
+  box-shadow: 0 22px 50px -32px rgba(0, 0, 0, 0.42);
+  transition:
+    transform 320ms ease,
+    border-color 320ms ease,
+    box-shadow 320ms ease;
+}
+
+.project-page-card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--color-secondary) 55%, var(--color-outline-variant));
+  box-shadow: 0 28px 60px -34px color-mix(in srgb, var(--color-secondary) 55%, #000);
+}
+
+.project-visual {
+  position: relative;
+  display: grid;
+  min-height: 250px;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--color-teal) 9%, transparent), transparent 34%),
+    var(--color-surface-container);
+}
+
+.project-visual::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  content: "";
+  background: var(--color-outline-variant);
+}
+
+.project-visual-factory {
+  background:
+    radial-gradient(circle at 22% 60%, color-mix(in srgb, var(--color-secondary) 9%, transparent), transparent 36%),
+    var(--color-surface-container-high);
+}
+
+.project-visual-fleet {
+  background:
+    radial-gradient(circle at 35% 20%, color-mix(in srgb, var(--color-teal) 18%, transparent), transparent 32%),
+    var(--color-surface-container-high);
+}
+
+.project-visual-agri {
+  background:
+    radial-gradient(circle at 72% 44%, rgba(39, 201, 63, 0.16), transparent 36%),
+    color-mix(in srgb, var(--color-green) 10%, var(--color-surface-container-high));
+}
+
+.project-visual-meta {
+  position: absolute;
+  bottom: 1.1rem;
+  left: 1rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-green);
+}
+
+.factory-screen {
+  display: grid;
+  grid-template-columns: 40px 52px;
+  gap: 10px;
+}
+
+.factory-screen span,
+.factory-screen strong {
+  display: block;
+  height: 24px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-teal) 20%, transparent);
+  animation: component-float 4s ease-in-out infinite;
+}
+
+.factory-screen span:first-child {
+  background: color-mix(in srgb, var(--color-secondary) 22%, transparent);
+}
+
+.factory-screen strong {
+  grid-column: 1 / -1;
+  width: 100px;
+}
+
+.fleet-line {
+  position: relative;
+  width: 120px;
+  height: 70px;
+}
+
+.fleet-line::before {
+  position: absolute;
+  left: 28px;
+  top: 22px;
+  width: 70px;
+  height: 2px;
+  content: "";
+  rotate: 28deg;
+  background: color-mix(in srgb, var(--color-on-surface-variant) 40%, transparent);
+}
+
+.fleet-line span {
+  position: absolute;
+  width: 16px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-teal) 35%, transparent);
+  animation: breathe 2.6s ease-in-out infinite;
+}
+
+.fleet-line span:nth-child(1) {
+  left: 18px;
+  top: 10px;
+}
+
+.fleet-line span:nth-child(2) {
+  right: 16px;
+  top: 42px;
+  background: color-mix(in srgb, var(--color-secondary) 35%, transparent);
+}
+
+.fleet-line strong {
+  position: absolute;
+  bottom: 8px;
+  left: 2px;
+  width: 90px;
+  height: 16px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-secondary) 14%, transparent);
+}
+
+.agri-bars {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  height: 62px;
+}
+
+.agri-bars span {
+  width: 30px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--color-green) 26%, transparent);
+  animation: grow-bar 2.4s ease-in-out infinite alternate;
+}
+
+.agri-bars span:nth-child(1) {
+  height: 40px;
+}
+
+.agri-bars span:nth-child(2) {
+  height: 30px;
+  background: color-mix(in srgb, var(--color-teal) 24%, transparent);
+  animation-delay: 0.25s;
+}
+
+.agri-bars span:nth-child(3) {
+  height: 46px;
+  background: color-mix(in srgb, var(--color-secondary) 20%, transparent);
+  animation-delay: 0.5s;
+}
+
+.professional-timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem 7rem;
+  margin-top: 4.5rem;
+}
+
+.professional-timeline::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  content: "";
+  background:
+    linear-gradient(var(--color-secondary), var(--color-secondary)) top / 100% 0 no-repeat,
+    color-mix(in srgb, var(--color-outline-variant) 80%, transparent);
+  animation: timeline-grow 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.experience-entry {
+  position: relative;
+  max-width: 520px;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--color-surface-container-low) 88%, transparent);
+  padding: 1.5rem;
+  box-shadow: 0 20px 55px -38px rgba(0, 0, 0, 0.5);
+  transition:
+    transform 320ms ease,
+    border-color 320ms ease,
+    box-shadow 320ms ease;
+}
+
+.experience-entry:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--color-secondary) 55%, var(--color-outline-variant));
+  box-shadow: 0 28px 70px -42px color-mix(in srgb, var(--color-secondary) 55%, #000);
+}
+
+.experience-entry-left {
+  grid-column: 1;
+  text-align: right;
+  justify-self: end;
+}
+
+.experience-entry-right {
+  grid-column: 2;
+  margin-top: 7rem;
+}
+
+.experience-dot {
+  position: absolute;
+  top: 0.35rem;
+  width: 9px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--color-secondary);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-secondary) 14%, transparent);
+  animation: experience-dot-pulse 2.2s ease-in-out infinite;
+}
+
+.experience-entry-left .experience-dot {
+  right: calc(-4rem - 4.5px);
+}
+
+.experience-entry-right .experience-dot {
+  left: calc(-4rem - 4.5px);
+}
+
+.experience-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--color-secondary) 12%, transparent), transparent 32%),
+    radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--color-teal) 10%, transparent), transparent 28%),
+    var(--color-surface-container-low);
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.experience-skill-chip {
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 999px;
+  background: var(--color-background);
+  padding: 0.8rem 1rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: var(--color-on-surface-variant);
+}
+
+.experience-skill-chip strong,
+.experience-skill-chip small {
+  display: block;
+}
+
+.experience-skill-chip strong {
+  color: var(--color-on-surface);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.experience-skill-chip small {
+  margin-top: 0.2rem;
+  font-size: 9px;
+  color: var(--color-on-surface-variant);
+}
+
+.experience-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.experience-index {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: color-mix(in srgb, var(--color-on-surface-variant) 70%, transparent);
+}
+
+.experience-point {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.experience-point::before {
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 0.45rem;
+  height: 1px;
+  content: "";
+  background: var(--color-secondary);
+}
+
+.contact-panel {
+  overflow: hidden;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 28px;
+  background: var(--color-surface-container-low);
+  box-shadow: 0 24px 60px -38px rgba(0, 0, 0, 0.46);
+}
+
+.contact-profile-column {
+  align-self: start;
+}
+
+.profile-card {
+  overflow: hidden;
+  margin-bottom: 2rem;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 32px;
+  background: var(--color-surface-container-low);
+  box-shadow: 0 24px 60px -38px rgba(0, 0, 0, 0.58);
+}
+
+.profile-card-image {
+  width: 100%;
+  height: min(54vw, 420px);
+  object-fit: cover;
+  object-position: center 22%;
+}
+
+.profile-card-body {
+  padding: 1.5rem;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-outline-variant);
+  transition:
+    background-color 240ms ease,
+    color 240ms ease;
+}
+
+.contact-row:last-child {
+  border-bottom: 0;
+}
+
+.contact-row:hover {
+  background: color-mix(in srgb, var(--color-secondary) 8%, transparent);
+}
+
+.contact-social-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.contact-social-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 18px;
+  background: var(--color-surface-container-low);
+  padding: 1.1rem;
+  transition:
+    transform 260ms ease,
+    border-color 260ms ease,
+    background-color 260ms ease;
+}
+
+.contact-social-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--color-secondary) 55%, var(--color-outline-variant));
+  background: color-mix(in srgb, var(--color-secondary) 7%, var(--color-surface-container-low));
+}
+
+.form-input {
+  width: 100%;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 14px;
+  background: var(--color-background);
+  padding: 0.95rem 1rem;
+  color: var(--color-on-surface);
+  outline: none;
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    background-color 220ms ease;
+}
+
+.form-input:focus {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-secondary) 16%, transparent);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.58);
+  backdrop-filter: blur(10px);
+}
+
+.consultation-modal {
+  width: min(100%, 520px);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 28px;
+  background: var(--color-surface-container-low);
+  padding: 1.5rem;
+  box-shadow: 0 28px 80px -38px rgba(0, 0, 0, 0.72);
+}
+
+.modal-close {
+  display: grid;
+  width: 36px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 999px;
+  color: var(--color-on-surface);
+  font-size: 24px;
+  line-height: 1;
+}
+
+:root[data-theme="dark"] .project-page-card,
+:root[data-theme="dark"] .contact-panel,
+:root[data-theme="dark"] .contact-social-card,
+:root[data-theme="dark"] .consultation-modal,
+:root[data-theme="dark"] .profile-card,
+:root[data-theme="dark"] .experience-entry,
+:root[data-theme="dark"] .experience-hero {
+  background: #13171e;
+}
+
 .engineering-map {
   isolation: isolate;
 }
@@ -839,9 +1299,48 @@ body {
   }
 }
 
+@keyframes terminal-type-loop {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  18% {
+    width: 100%;
+    opacity: 1;
+  }
+  82% {
+    width: 100%;
+    opacity: 1;
+  }
+  96%,
+  100% {
+    width: 0;
+    opacity: 0;
+  }
+}
+
 @keyframes cursor-blink {
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes timeline-grow {
+  to {
+    background-size: 100% 100%, auto;
+  }
+}
+
+@keyframes experience-dot-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--color-secondary) 12%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 13px color-mix(in srgb, var(--color-secondary) 0%, transparent);
   }
 }
 
@@ -936,6 +1435,33 @@ body {
     min-height: 54px;
     padding-inline: 1.25rem;
     font-size: 16px;
+  }
+
+  .professional-timeline {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+    padding-left: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .professional-timeline::before {
+    left: 0;
+  }
+
+  .experience-entry,
+  .experience-entry-left,
+  .experience-entry-right {
+    grid-column: 1;
+    margin-top: 0;
+    text-align: left;
+    justify-self: start;
+    width: 100%;
+  }
+
+  .experience-entry-left .experience-dot,
+  .experience-entry-right .experience-dot {
+    left: calc(-1.5rem - 4.5px);
+    right: auto;
   }
 }
 

@@ -1,5 +1,8 @@
-"use client";
+﻿"use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, useMotionTemplate, useMotionValue, useScroll, useTransform } from "framer-motion";
 import { ThemeProvider, useTheme } from "@/components/theme-provider";
 import { navItems, stats } from "@/lib/content";
@@ -31,6 +34,18 @@ const iconPaths: Record<string, React.ReactNode> = {
     <>
       <path d="M4 6h16v12H4z" />
       <path d="m4 7 8 6 8-6" />
+    </>
+  ),
+  linkedin: (
+    <>
+      <path d="M16 8a6 6 0 0 1 6 6v6h-4v-6a2 2 0 0 0-4 0v6h-4V9h4v2" />
+      <path d="M2 9h4v11H2zM4 4h.01" />
+    </>
+  ),
+  github: (
+    <>
+      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-6a5.5 5.5 0 0 0-1.5-4 5 5 0 0 0-.1-3.5s-1.2-.4-4 1.5a13.4 13.4 0 0 0-7 0C4.6.6 3.4 1 3.4 1a5 5 0 0 0-.1 3.5A5.5 5.5 0 0 0 2 8.5c0 4 3 6 6 6a4.8 4.8 0 0 0-1 3.5v4" />
+      <path d="M9 18c-4.5 2-5-2-7-2" />
     </>
   ),
   notifications_active: (
@@ -73,7 +88,24 @@ const terminalSession = [
   { text: "notify.dispatch -> email + push + dashboard toast", tone: "success" }
 ];
 
-const Icon = ({ name, className = "" }: { name: string; className?: string }) => (
+const adminEmail = "sohankumawat2829@gmail.com";
+
+async function sendContactRequest(payload: Record<string, string>) {
+  const response = await fetch("/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  return response.ok;
+}
+
+function openMailFallback(subject: string, fields: Record<string, string>) {
+  const body = Object.entries(fields).map(([label, value]) => `${label}: ${value}`).join("\n");
+  window.location.href = `mailto:${adminEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+export const Icon = ({ name, className = "" }: { name: string; className?: string }) => (
   <svg
     aria-hidden="true"
     viewBox="0 0 24 24"
@@ -109,7 +141,99 @@ function ThemeToggle() {
   );
 }
 
-function Navbar() {
+export function ScheduleConsultationButton({ className = "" }: { className?: string }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)} className={className || "button-primary"}>
+        Schedule Consultation
+      </button>
+      {open ? <ConsultationModal onClose={() => setOpen(false)} /> : null}
+    </>
+  );
+}
+
+function ConsultationModal({ onClose }: { onClose: () => void }) {
+  function submitConsultation(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const payload = {
+      type: "Consultation Request",
+      name: String(form.get("name") ?? ""),
+      email: String(form.get("email") ?? ""),
+      phone: String(form.get("phone") ?? ""),
+      datetime: String(form.get("datetime") ?? "")
+    };
+
+    sendContactRequest(payload)
+      .then((ok) => {
+        if (ok) onClose();
+        else openMailFallback("Portfolio consultation request", payload);
+      })
+      .catch(() => openMailFallback("Portfolio consultation request", payload));
+  }
+
+  return (
+    <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Schedule consultation">
+      <div className="consultation-modal">
+        <div className="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-secondary">
+              Consultation
+            </p>
+            <h2 className="text-2xl font-semibold">Schedule a call</h2>
+          </div>
+          <button type="button" onClick={onClose} className="modal-close" aria-label="Close consultation form">
+            ×
+          </button>
+        </div>
+        <form onSubmit={submitConsultation} className="space-y-4">
+          <FormField name="name" label="Name" required />
+          <FormField name="email" label="Email" type="email" required />
+          <FormField name="phone" label="Phone Number" type="tel" required />
+          <FormField name="datetime" label="Date & Time" type="datetime-local" required />
+          <button type="submit" className="button-primary w-full justify-center">
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function FormField({
+  name,
+  label,
+  type = "text",
+  required = false,
+  multiline = false
+}: {
+  name: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  multiline?: boolean;
+}) {
+  const sharedClass = "form-input";
+
+  return (
+    <label className="block">
+      <span className="mb-2 block font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
+        {label}
+      </span>
+      {multiline ? (
+        <textarea name={name} required={required} rows={5} className={sharedClass} />
+      ) : (
+        <input name={name} type={type} required={required} className={sharedClass} />
+      )}
+    </label>
+  );
+}
+
+export function Navbar() {
+  const pathname = usePathname();
+
   return (
     <motion.nav
       initial={{ opacity: 0, y: -24 }}
@@ -118,35 +242,29 @@ function Navbar() {
       className="fixed left-1/2 top-4 z-50 w-[calc(100%-32px)] max-w-5xl -translate-x-1/2 sm:top-6 sm:w-[calc(100%-40px)]"
     >
       <div className="glass-kinetic flex items-center justify-between gap-4 rounded-full px-4 py-3 sm:px-8">
-        <a href="#" className="flex min-w-0 items-center gap-2">
-          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-on-primary">
-            <Icon name="architecture" className="text-[18px]" />
+        <Link href="/" className="flex min-w-0 items-center gap-2">
+          <span className="brand-mark">
+            SB
           </span>
           <span className="truncate text-[17px] font-semibold tracking-tight sm:text-[18px]">
-            Sohan.io
+            Sohanlal.dev
           </span>
-        </a>
+        </Link>
         <div className="hidden items-center gap-8 md:flex">
           {navItems.map((item) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
+            <Link
+              key={item.href}
+              href={item.href}
               className={`nav-link relative font-mono text-[13px] uppercase tracking-[0.05em] transition-colors hover:text-secondary ${
-                item === "Home" ? "nav-link-active text-on-surface" : "text-on-surface-variant"
+                pathname === item.href ? "nav-link-active text-on-surface" : "text-on-surface-variant"
               }`}
             >
-              {item}
-            </a>
+              {item.label}
+            </Link>
           ))}
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <a
-            href="mailto:hello@example.com"
-            className="hidden rounded-full bg-primary px-6 py-2 font-mono text-[13px] font-medium uppercase tracking-[0.05em] text-on-primary transition hover:-translate-y-0.5 hover:bg-secondary hover:shadow-accent sm:inline-flex"
-          >
-            Connect
-          </a>
         </div>
       </div>
     </motion.nav>
@@ -203,7 +321,7 @@ function MetricPanel({
         <span className="text-[44px] font-bold leading-none text-white sm:text-[48px]">{value}</span>
         {live ? <span className="live-dot size-2.5 rounded-full bg-green shadow-[0_0_10px_#27c93f]" /> : null}
       </div>
-      <span className="text-[12px] font-medium text-teal">↑ {trend}</span>
+      <span className="text-[12px] font-medium text-teal">â†‘ {trend}</span>
     </div>
   );
 }
@@ -234,7 +352,7 @@ function AlarmPanel() {
 function ChartPanel() {
   return (
     <div className="min-h-[154px] space-y-4 p-5 sm:p-6">
-      <span className="font-mono text-[10px] uppercase tracking-wider text-muted-readout">Temperature · 24h</span>
+      <span className="font-mono text-[10px] uppercase tracking-wider text-muted-readout">Temperature Â· 24h</span>
       <svg className="h-20 w-full" preserveAspectRatio="none" viewBox="0 0 200 60" aria-hidden="true">
         <path
           d="M0,50 Q25,20 50,45 T100,25 T150,40 T200,30"
@@ -300,28 +418,35 @@ function Hero() {
         <div className="space-y-8 lg:col-span-6">
           <motion.div variants={fadeUp} className="status-chip">
             <span className="size-2 rounded-full bg-secondary animate-pulse" />
-            <span>Available for Architecture Audits</span>
+            <span>Available for IoT dashboard projects</span>
           </motion.div>
           <motion.h1
             variants={fadeUp}
-            className="max-w-3xl text-[clamp(3rem,7vw,5.7rem)] font-bold leading-[1.02] tracking-[-0.02em] text-on-surface"
+            className="max-w-[760px] text-[clamp(2.8rem,5.8vw,4.9rem)] font-bold leading-[1.02] tracking-[-0.02em] text-on-surface"
           >
-            Sohanlal
-            <span className="block font-light text-secondary">IoT Dashboard Developer</span>
+            ThingsBoard IoT
+            <span className="block font-light text-secondary">Dashboard Engineer</span>
             <span className="ml-1 inline-block h-[0.85em] w-[3px] translate-y-2 bg-secondary animate-pulse" />
           </motion.h1>
           <motion.p variants={fadeUp} className="max-w-xl text-lg leading-[1.65] text-on-surface-variant">
-            I turn raw IoT device data into powerful user experiences, designing real-time dashboards,
-            interactive widgets, smart alarm systems, and instant notification pipelines on ThingsBoard.
+            I build production-ready ThingsBoard dashboards, custom widgets, rule-engine workflows,
+            telemetry pipelines, and web interfaces for industrial IoT systems.
           </motion.p>
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
+            {["NistantriTech", "ThingsBoard Specialist", "Ahmedabad, India"].map((item) => (
+              <span key={item} className="rounded-full border border-outline-variant bg-surface-container-low px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-on-surface-variant">
+                {item}
+              </span>
+            ))}
+          </motion.div>
           <motion.div variants={fadeUp} className="flex flex-col gap-4 pt-2 sm:flex-row">
-            <a href="#projects" className="button-primary group">
-              View My Dashboards
+            <Link href="/projects" className="button-primary group">
+              View Projects
               <Icon name="arrow_forward" className="text-[22px] transition group-hover:translate-x-1" />
-            </a>
-            <a href="#stack" className="button-secondary">
-              My Tech Stack
-            </a>
+            </Link>
+            <Link href="/experience" className="button-secondary">
+              Experience
+            </Link>
           </motion.div>
         </div>
         <div className="lg:col-span-6">
@@ -416,10 +541,10 @@ function MainProjectCard() {
               What is the current temperature of Node 04?
             </div>
             <div className="max-w-[82%] rounded-2xl rounded-tl-none bg-surface-container-high p-3 text-teal">
-              Node 04 is currently at 38.2°C. Should I set an alarm?
+              Node 04 is currently at 38.2Â°C. Should I set an alarm?
             </div>
             <div className="ml-auto max-w-[82%] rounded-2xl rounded-tr-none bg-secondary p-3 text-white">
-              Yes, trigger alert if it goes above 40°C.
+              Yes, trigger alert if it goes above 40Â°C.
             </div>
             <div className="flex max-w-[82%] items-center gap-1 rounded-2xl rounded-tl-none bg-surface-container-high p-3 text-teal">
               Confirmed. Alert active.
@@ -429,7 +554,7 @@ function MainProjectCard() {
         </div>
         <div className="flex-1 space-y-4 border-l border-white/5 bg-inverse p-5 sm:p-6">
           {[
-            ["TEMP", "38.2°C"],
+            ["TEMP", "38.2Â°C"],
             ["DEVICES", "12"],
             ["ALARMS", "03"]
           ].map(([label, value], index) => (
@@ -533,7 +658,7 @@ function AlertingCard() {
           LIVE TELEMETRY
         </span>
         <span className="font-mono text-[10px] uppercase tracking-[0.05em] text-white/45">
-          Email Alerts · Push Notify · Python · Reports
+          Email Alerts Â· Push Notify Â· Python Â· Reports
         </span>
       </div>
     </motion.article>
@@ -633,23 +758,39 @@ function EngineeringInfrastructure() {
               <span className="font-mono text-[11px] text-muted-readout">system@iot-stack:~$</span>
             </div>
             <div className="min-h-[360px] p-6 font-mono text-[12px] leading-relaxed sm:p-8 sm:text-[13px]">
-              <div className="terminal-session">
-                {terminalSession.map((line, index) => (
-                  <p
-                    key={`${line.text}-${index}`}
-                    className={`terminal-line terminal-line-${line.tone}`}
-                    style={{ animationDelay: `${0.35 + index * 0.55}s` }}
-                  >
-                    {line.text}
-                  </p>
-                ))}
-                <span className="terminal-cursor" />
-              </div>
+              <TerminalReplay />
             </div>
           </motion.div>
         </div>
       </motion.div>
     </section>
+  );
+}
+
+function TerminalReplay() {
+  const [cycle, setCycle] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setCycle((current) => current + 1);
+    }, 9000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return (
+    <div key={cycle} className="terminal-session">
+      {terminalSession.map((line, index) => (
+        <p
+          key={`${line.text}-${index}`}
+          className={`terminal-line terminal-line-${line.tone}`}
+          style={{ animationDelay: `${0.35 + index * 0.55}s` }}
+        >
+          {line.text}
+        </p>
+      ))}
+      <span className="terminal-cursor" />
+    </div>
   );
 }
 
@@ -709,12 +850,10 @@ function CTA() {
             Whether you are scaling an industrial network or architecting a consumer device interface, let&apos;s make the system secure and future-ready.
           </p>
           <div className="relative flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
-            <a href="mailto:hello@example.com" className="button-primary w-full justify-center sm:w-auto">
-              Schedule Consultation
-            </a>
-            <a href="#" className="button-ghost w-full justify-center sm:w-auto">
-              Download Portfolio
-            </a>
+            <ScheduleConsultationButton className="button-primary w-full justify-center sm:w-auto" />
+            <Link href="/contact" className="button-ghost w-full justify-center sm:w-auto">
+              Contact
+            </Link>
           </div>
         </motion.div>
       </motion.div>
@@ -722,23 +861,16 @@ function CTA() {
   );
 }
 
-function Footer() {
+export function Footer() {
   return (
     <footer className="border-t border-outline-variant bg-footer py-10 sm:py-12">
       <div className="mx-auto flex max-w-site flex-col items-center justify-between gap-8 px-mobile text-center sm:px-10 md:flex-row md:text-left lg:px-desktop">
         <div className="flex flex-col items-center gap-2 md:items-start">
-          <div className="flex items-center gap-2">
-            <Icon name="architecture" className="text-[20px] text-secondary" />
-            <span className="text-[18px] font-semibold">Sohan.io</span>
-          </div>
-          <p className="font-mono text-[12px] uppercase text-on-surface-variant">© 2026 IoT Dashboard Developer</p>
-        </div>
-        <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-10">
-          {navItems.slice(1).map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="font-mono text-[12px] uppercase text-on-surface-variant transition hover:text-secondary">
-              {item}
-            </a>
-          ))}
+          <Link href="/" className="flex items-center gap-2">
+            <span className="brand-mark">SB</span>
+            <span className="text-[18px] font-semibold">Sohanlal.dev</span>
+          </Link>
+          <p className="font-mono text-[12px] uppercase text-on-surface-variant">Â© 2026 IoT Dashboard Developer</p>
         </div>
         <div className="flex items-center gap-2 text-on-surface-variant">
           <span className="font-mono text-[11px] uppercase tracking-widest">Built with precision</span>
@@ -772,3 +904,5 @@ export function HomePage() {
     </ThemeProvider>
   );
 }
+
+

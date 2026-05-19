@@ -1,8 +1,13 @@
-export const navItems = ["Home", "Projects", "Stack", "Insights"];
+export const navItems = [
+  { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects" },
+  { label: "Experience", href: "/experience" },
+  { label: "Contact", href: "/contact" }
+];
 
 export const stats = [
   { label: "Dashboards Built", value: "15+" },
-  { label: "Experience", value: "3 Yrs" },
+  { label: "Experience", value: "2+ Yrs" },
   { label: "Widgets Deployed", value: "50+" },
   { label: "ThingsBoard", value: "Expert" }
 ];
