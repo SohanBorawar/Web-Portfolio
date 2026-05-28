@@ -233,18 +233,41 @@ body {
   transition: opacity 360ms ease, transform 360ms ease;
 }
 
+.hero-widget::after {
+  position: absolute;
+  inset: -1.25rem;
+  z-index: -1;
+  content: "";
+  border-radius: 36px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-secondary) 18%, transparent), transparent 42%),
+    radial-gradient(circle at 72% 18%, color-mix(in srgb, var(--color-teal) 18%, transparent), transparent 34%);
+  opacity: 0;
+  transform: scale(0.94);
+  transition:
+    opacity 360ms ease,
+    transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .hero-widget:hover::before {
   opacity: 1;
   transform: scale(1.04);
 }
 
+.hero-widget:hover::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
 .hero-widget-frame {
   transition:
     border-color 360ms ease,
+    transform 360ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 360ms ease;
 }
 
 .hero-widget:hover .hero-widget-frame {
+  transform: translateY(-6px);
   border-color: color-mix(in srgb, var(--color-secondary) 34%, var(--glass-border));
   box-shadow:
     var(--glass-shadow),
@@ -609,6 +632,13 @@ body {
     color-mix(in srgb, var(--color-green) 10%, var(--color-surface-container-high));
 }
 
+.project-visual-angular {
+  background:
+    radial-gradient(circle at 28% 24%, color-mix(in srgb, var(--color-secondary) 18%, transparent), transparent 30%),
+    radial-gradient(circle at 78% 68%, color-mix(in srgb, var(--color-teal) 15%, transparent), transparent 32%),
+    var(--color-surface-container-high);
+}
+
 .project-visual-meta {
   position: absolute;
   bottom: 1.1rem;
@@ -616,6 +646,52 @@ body {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--color-green);
+}
+
+.angular-screen {
+  position: relative;
+  display: grid;
+  width: 150px;
+  height: 108px;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 32%, var(--color-outline-variant));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--color-background) 72%, transparent);
+  box-shadow: 0 24px 40px -30px rgba(0, 0, 0, 0.6);
+  animation: component-float 4.8s ease-in-out infinite;
+}
+
+.angular-screen::before {
+  position: absolute;
+  inset: -14px;
+  z-index: -1;
+  content: "";
+  border-radius: 20px;
+  border: 1px solid color-mix(in srgb, var(--color-teal) 34%, transparent);
+  animation: infra-ring 2.8s ease-out infinite;
+}
+
+.angular-screen span,
+.angular-screen strong {
+  display: grid;
+  min-height: 28px;
+  place-items: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-secondary) 14%, transparent);
+}
+
+.angular-screen span:last-child {
+  grid-column: 1 / -1;
+  background: color-mix(in srgb, var(--color-teal) 14%, transparent);
+}
+
+.angular-screen strong {
+  color: var(--color-secondary);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  text-transform: uppercase;
 }
 
 .factory-screen {
@@ -725,6 +801,66 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 4rem 7rem;
   margin-top: 4.5rem;
+}
+
+.experience-motion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.experience-signal-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 154px;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-surface-container-low) 92%, transparent), var(--color-background));
+  padding: 1.25rem;
+  animation: infra-card-float 5.6s ease-in-out infinite;
+}
+
+.experience-signal-card::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(110deg, transparent 0 35%, color-mix(in srgb, var(--color-secondary) 10%, transparent) 48%, transparent 62% 100%);
+  transform: translateX(-120%);
+  animation: experience-sheen 4.8s ease-in-out infinite;
+}
+
+.experience-signal-pulse {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  width: 11px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: var(--color-green);
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-green) 14%, transparent);
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+.experience-signal-track {
+  position: relative;
+  display: block;
+  height: 7px;
+  margin-top: 1.75rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-outline-variant) 55%, transparent);
+}
+
+.experience-signal-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-teal));
+  transform-origin: left;
+  animation: infra-bar-load 3.8s ease-in-out infinite;
 }
 
 .professional-timeline::before {
@@ -881,9 +1017,12 @@ body {
 
 .profile-card-image {
   width: 100%;
-  height: min(54vw, 420px);
-  object-fit: cover;
-  object-position: center 22%;
+  height: clamp(260px, 40vw, 420px);
+  object-fit: contain;
+  object-position: center;
+  background:
+    radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--color-secondary) 10%, transparent), transparent 38%),
+    var(--color-surface-container);
 }
 
 .profile-card-body {
@@ -953,6 +1092,63 @@ body {
 .form-input:focus {
   border-color: var(--color-secondary);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-secondary) 16%, transparent);
+}
+
+.consultation-picker {
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-surface-container-high) 78%, transparent), var(--color-background));
+  padding: 1rem;
+}
+
+.consultation-picker-head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.consultation-picker-icon {
+  display: grid;
+  width: 42px;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-secondary) 12%, transparent);
+  color: var(--color-secondary);
+}
+
+.consultation-date-input {
+  min-height: 52px;
+}
+
+.consultation-time-select {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 14px;
+  background: var(--color-background);
+  padding: 0 1rem;
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.consultation-time-select:focus-within {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-secondary) 16%, transparent);
+}
+
+.consultation-time-select select {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--color-on-surface);
+  font: inherit;
+  outline: none;
 }
 
 .modal-backdrop {
@@ -1344,6 +1540,17 @@ body {
   }
 }
 
+@keyframes experience-sheen {
+  0%,
+  38% {
+    transform: translateX(-120%);
+  }
+  68%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
 @keyframes infra-grid-pan {
   from {
     background-position: 0 0;
@@ -1442,6 +1649,10 @@ body {
     gap: 3.5rem;
     padding-left: 1.5rem;
     margin-top: 3rem;
+  }
+
+  .experience-motion-grid {
+    grid-template-columns: 1fr;
   }
 
   .professional-timeline::before {

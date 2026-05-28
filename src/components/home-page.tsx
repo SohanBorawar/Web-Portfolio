@@ -36,6 +36,18 @@ const iconPaths: Record<string, React.ReactNode> = {
       <path d="m4 7 8 6 8-6" />
     </>
   ),
+  calendar: (
+    <>
+      <path d="M8 2v4M16 2v4M3 10h18" />
+      <path d="M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" />
+    </>
+  ),
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </>
+  ),
   linkedin: (
     <>
       <path d="M16 8a6 6 0 0 1 6 6v6h-4v-6a2 2 0 0 0-4 0v6h-4V9h4v2" />
@@ -158,12 +170,14 @@ function ConsultationModal({ onClose }: { onClose: () => void }) {
   function submitConsultation(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const date = String(form.get("date") ?? "");
+    const time = String(form.get("time") ?? "");
     const payload = {
       type: "Consultation Request",
       name: String(form.get("name") ?? ""),
       email: String(form.get("email") ?? ""),
       phone: String(form.get("phone") ?? ""),
-      datetime: String(form.get("datetime") ?? "")
+      datetime: `${date} ${time} IST`.trim()
     };
 
     sendContactRequest(payload)
@@ -192,11 +206,53 @@ function ConsultationModal({ onClose }: { onClose: () => void }) {
           <FormField name="name" label="Name" required />
           <FormField name="email" label="Email" type="email" required />
           <FormField name="phone" label="Phone Number" type="tel" required />
-          <FormField name="datetime" label="Date & Time" type="datetime-local" required />
+          <ConsultationDateTimePicker />
           <button type="submit" className="button-primary w-full justify-center">
             Send
           </button>
         </form>
+      </div>
+    </div>
+  );
+}
+
+function ConsultationDateTimePicker() {
+  const timeSlots = ["10:00 AM", "11:30 AM", "02:00 PM", "03:30 PM", "05:00 PM", "06:30 PM"];
+
+  return (
+    <div className="consultation-picker">
+      <div className="consultation-picker-head">
+        <span className="consultation-picker-icon">
+          <Icon name="calendar" className="text-[18px]" />
+        </span>
+        <span>
+          <span className="block font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-on-surface-variant">
+            Preferred Schedule
+          </span>
+          <strong className="mt-1 block text-sm text-on-surface">India Standard Time</strong>
+        </span>
+      </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1.1fr]">
+        <label className="block">
+          <span className="mb-2 block text-sm font-semibold text-on-surface">Date</span>
+          <input name="date" type="date" required className="form-input consultation-date-input" />
+        </label>
+        <label className="block">
+          <span className="mb-2 block text-sm font-semibold text-on-surface">Time</span>
+          <span className="consultation-time-select">
+            <Icon name="clock" className="text-[18px] text-secondary" />
+            <select name="time" required defaultValue="" aria-label="Preferred consultation time">
+              <option value="" disabled>
+                Select a slot
+              </option>
+              {timeSlots.map((slot) => (
+                <option key={slot} value={slot}>
+                  {slot}
+                </option>
+              ))}
+            </select>
+          </span>
+        </label>
       </div>
     </div>
   );

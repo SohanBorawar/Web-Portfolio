@@ -8,25 +8,37 @@ import { fadeUp, scaleIn, staggerContainer } from "@/lib/motion";
 
 const projects = [
   {
+    title: "Angular Portfolio Web App",
+    body: "Responsive Angular web project with clean component structure, polished UI sections, and production deployment on Vercel.",
+    tags: ["Angular", "TypeScript", "Vercel"],
+    meta: "Angular live",
+    visual: "angular",
+    liveUrl: "https://sohanborawar-angular.vercel.app/",
+    githubUrl: "https://github.com/SohanBorawar"
+  },
+  {
     title: "Smart Factory Monitor",
     body: "Real-time temperature and humidity monitoring across 48 industrial nodes with threshold-based alarm escalation.",
     tags: ["ThingsBoard", "Angular", "MQTT"],
     meta: "48 nodes active",
-    visual: "factory"
+    visual: "factory",
+    githubUrl: "https://github.com/SohanBorawar"
   },
   {
     title: "Fleet GPS Tracker",
     body: "Live vehicle telemetry with geofencing alarms, route optimization, and real-time fleet status dashboards.",
     tags: ["ThingsBoard", "WebSockets", "REST API"],
     meta: "Live",
-    visual: "fleet"
+    visual: "fleet",
+    githubUrl: "https://github.com/SohanBorawar"
   },
   {
     title: "Agricultural IoT Hub",
     body: "Multi-sensor soil and weather dashboard for precision agriculture with predictive analytics and automated irrigation.",
     tags: ["ThingsBoard", "Node-RED", "InfluxDB"],
     meta: "Multi-sensor",
-    visual: "agri"
+    visual: "agri",
+    githubUrl: "https://github.com/SohanBorawar"
   }
 ];
 
@@ -77,7 +89,7 @@ const experiences = [
 const contactLinks = [
   ["Email", "sohankumawat2829@gmail.com", "mailto:sohankumawat2829@gmail.com", "mail"],
   ["LinkedIn", "Sohanlal Borawar", "https://www.linkedin.com/in/sohanlal-borawar-b485781a1/", "linkedin"],
-  ["GitHub", "Sohanlal Borawar", "https://github.com/sohanlal-borawar", "github"]
+  ["GitHub", "SohanBorawar", "https://github.com/SohanBorawar", "github"]
 ];
 
 async function sendContactRequest(payload: Record<string, string>) {
@@ -108,7 +120,13 @@ function PageShell({ children }: { children: React.ReactNode }) {
 function ProjectVisual({ type, meta }: { type: string; meta: string }) {
   return (
     <div className={`project-visual project-visual-${type}`}>
-      {type === "factory" ? (
+      {type === "angular" ? (
+        <div className="angular-screen">
+          <span />
+          <strong>ng</strong>
+          <span />
+        </div>
+      ) : type === "factory" ? (
         <div className="factory-screen">
           <span />
           <span />
@@ -145,7 +163,7 @@ export function ProjectsPage() {
           </motion.p>
         </motion.div>
 
-        <motion.div variants={staggerContainer} initial="hidden" animate="show" className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <motion.div variants={staggerContainer} initial="hidden" animate="show" className="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-4">
           {projects.map((project) => (
             <motion.article variants={scaleIn} key={project.title} className="project-page-card">
               <ProjectVisual type={project.visual} meta={project.meta} />
@@ -160,11 +178,11 @@ export function ProjectsPage() {
                 <h2 className="mb-3 text-2xl font-semibold">{project.title}</h2>
                 <p className="mb-7 leading-relaxed text-on-surface-variant">{project.body}</p>
                 <div className="flex items-center justify-between gap-4 font-mono text-[12px]">
-                  <a href="#" className="text-on-surface-variant transition hover:text-secondary">
+                  <a href={project.githubUrl} className="text-on-surface-variant transition hover:text-secondary">
                     &lt;&gt; GitHub
                   </a>
-                  <a href="#" className="font-bold text-secondary">
-                    View Case Study →
+                  <a href={project.liveUrl ?? project.githubUrl} className="font-bold text-secondary">
+                    {project.liveUrl ? "Open Live ->" : "View Case Study ->"}
                   </a>
                 </div>
               </div>
@@ -210,12 +228,38 @@ export function ExperiencePage() {
             ))}
           </div>
         </motion.div>
-        <div className="professional-timeline">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-120px" }}
+          className="experience-motion-grid"
+        >
+          {[
+            ["Rule Engine", "Workflow logic", "87%"],
+            ["Telemetry", "Live data paths", "92%"],
+            ["Widgets", "Dashboard UI", "95%"]
+          ].map(([title, label, width], index) => (
+            <motion.div variants={fadeUp} key={title} className="experience-signal-card" style={{ animationDelay: `${index * 0.35}s` }}>
+              <span className="experience-signal-pulse" />
+              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-secondary">{title}</p>
+              <h2 className="mt-3 text-xl font-semibold">{label}</h2>
+              <span className="experience-signal-track">
+                <span style={{ width }} />
+              </span>
+            </motion.div>
+          ))}
+        </motion.div>
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-140px" }}
+          className="professional-timeline"
+        >
           {experiences.map((item, index) => (
             <motion.article
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.16, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              variants={fadeUp}
               key={item.title}
               className={`experience-entry ${index % 2 === 0 ? "experience-entry-left" : "experience-entry-right"}`}
             >
@@ -235,7 +279,7 @@ export function ExperiencePage() {
               </ul>
             </motion.article>
           ))}
-        </div>
+        </motion.div>
       </section>
     </PageShell>
   );
